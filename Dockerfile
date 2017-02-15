@@ -14,6 +14,8 @@ RUN apt-add-repository ppa:brightbox/ruby-ng; \
 RUN git clone https://github.com/jpsim/SourceKitten.git; \
     cd SourceKitten; \
     swift build -c release; \
-    cp ./.build/release/sourcekitten /usr/local/bin/sourcekitten
-    cp ./.build/release/libCYaml.so /usr/local/bin/sourcekitten/libCYaml.so
+    cp ./.build/release/sourcekitten /usr/local/bin/sourcekitten; \
+    cp ./.build/release/libCYaml.so /usr/local/lib/libCYaml.so; \
+    rm -rf SourceKitten
+COPY ./libsourcekitdInProc.so /usr/local/lib/libsourcekitdInProc.so
 
