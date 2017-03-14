@@ -104,12 +104,16 @@ RUN mkdir -p /root/.config/nvim
 RUN  add-apt-repository ppa:neovim-ppa/stable; \
      apt-get update; \
      apt-get install -y tmux neovim \
-       python-dev python-pip python3-dev python3-pip
+       python-dev python-pip python3-dev python3-pip wget unzip zip
 RUN pip3 install pyyaml neovim
 RUN gem install neovim
 RUN git clone https://github.com/VundleVim/Vundle.vim.git /root/.config/nvim/bundle/Vundle.vim
 
 COPY ./nvim-config/init.vim /root/.config/nvim/init.vim
 
-RUN nvim +PluginInstall +qall
+RUN nvim --headless +PluginInstall +qall
 RUN nvim --headless +UpdateRemotePlugins +qall
+
+# Add terraform
+RUN wget https://releases.hashicorp.com/terraform/0.8.7/terraform_0.8.7_linux_amd64.zip; \
+    unzip terraform_0.8.7_linux_amd64.zip -d /usr/bin
