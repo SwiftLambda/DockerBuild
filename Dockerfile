@@ -50,24 +50,26 @@ ENV SWIFT_INSTALL_DIR="${WORK_DIR}/swift-nightly-install" \
 
 # Make ${OUTPUT_DIR} ${WORK_DIR}
 RUN mkdir -p ${OUTPUT_DIR} && chown swift-dev:swift-dev ${OUTPUT_DIR} && \
-    mkdir -p ${WORK_DIR} && chown swift-dev:swift-dev ${WORK_DIR}
+    mkdir -p ${WORK_DIR} && sudo chown swift-dev:swift-dev ${WORK_DIR}
+
+USER swift-dev
 
 # Clone & Check Out to ${WORK_DIR}
-RUN sudo --user=swift-dev git clone https://github.com/norio-nomura/swift-dev.git && \
+RUN git clone https://github.com/norio-nomura/swift-dev.git && \
 
 # Using commit hash will avoid caching by branch name.
     cd ${WORK_DIR} && \
-    sudo --user=swift-dev git fetch && \
-    sudo --user=swift-dev git checkout ${REVISION} && \
-    sudo --user=swift-dev git submodule update --init --recursive && \
+    git fetch && \
+    git checkout ${REVISION} && \
+    git submodule update --init --recursive && \
 
 # Build Swift installer package at ${SWIFT_INSTALLABLE_PACKAGE}
     cd ${SRC_DIR} && \
-    sudo --user=swift-dev utils/build-script \
+    utils/build-script \
       --preset-file="${WORK_DIR}/build-presets-for-sourcekit-linux.ini" \
       --preset="buildbot_linux_libdispatch" \
       install_destdir="${SWIFT_INSTALL_DIR}" && \
-    sudo --user=swift-dev utils/build-script \
+    utils/build-script \
       --preset-file="${WORK_DIR}/build-presets-for-sourcekit-linux.ini" \
       --preset="buildbot_linux" \
       -- \
